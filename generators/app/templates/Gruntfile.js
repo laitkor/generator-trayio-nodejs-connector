@@ -14,6 +14,10 @@ module.exports = function (grunt) {
 	    ]
 	  },
 
+	  generate: {
+	  	main: {}
+	  },
+
 	  watch: {
 		  scripts: {
 		    files: [
@@ -28,12 +32,22 @@ module.exports = function (grunt) {
 		      spawn: false,
 		    },
 		  },
+		  connectors: {
+		  	files: [
+		  		'connectors/**/*.json',
+		  		'connectors/**/**/*.json',
+		  		'connectors/**/**/**/*.json',
+		  		'!connectors/**/**/**/output.json',
+		  	],
+		  	tasks: ['generate']
+		  }
 		}
 
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-tray-connectors-generator');
 
 
 	grunt.registerTask('default', ['jshint']);
