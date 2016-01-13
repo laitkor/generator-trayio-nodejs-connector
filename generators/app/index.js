@@ -103,27 +103,51 @@ module.exports = generators.Base.extend({
 	    this.fs.copyTpl(this.templatePath("yart_run.sh"),this.destinationPath("yart_run.sh"),{});	
 
 	},	
-	// createConnectorsFolder: function () {
+	createConnectorsFolder: function () {
 
-	// 	// Top level
-	// 	this.fs.write(this.destinationPath('connectors/0/connectors.json'), stringify({
-	// 		name: slugify(this.name),
-	// 		title: this.name,
-	// 		description: this.description,
-	// 		version: "1.0",
-	// 		branches: [],
-	// 		icon: {
-	// 			type: "url",
-	// 			value: "http://images.tray.io.s3.amazonaws.com/static/icons/placeholder.png"
-	// 		},
-	// 		tags: [
-	// 			"service"
-	// 		]
-	// 	}));
+		// Top level
+		this.fs.write(this.destinationPath('connectors/0/connector.json'), stringify({
+			name: slugify(this.name),
+			title: this.name,
+			description: this.description,
+			version: "1.0",
+			branches: [],
+			icon: {
+				type: "url",
+				value: "http://images.tray.io.s3.amazonaws.com/static/icons/placeholder.png"
+			},
+			tags: [
+				"service"
+			]
+		}));
 
+		// Sample message
+		this.fs.write(this.destinationPath('connectors/0/messages/sample-message/message.json'), stringify({
+			"name": "sample-message",
+			"title": "Just a sample message",
+			"help_link": "#"
+		}));
 
+		// Sample message input
+		this.fs.write(this.destinationPath('connectors/0/messages/sample-message/input.json'), stringify({
+			"$schema": "http://json-schema.org/draft-04/schema#",
+			"id": "http://jsonschema.net",
+			"type": "object",
+			"properties": {
+				"name": {
+					"id": "http://jsonschema.net/name",
+					"type": "string",
+					"title": "Name",
+				}
+			}
+		}));
 
-	// },
+		// Sample message response
+		this.fs.write(this.destinationPath('connectors/0/messages/sample-message/response.json'), stringify({
+			"result": true
+		}));
+
+	},
 	createConnectorJSON: function() {
 		this.fs.write(this.destinationPath("connectors.json"), JSON.stringify([]));
 	},
