@@ -1,5 +1,6 @@
 var generators = require('yeoman-generator');
 var path = require('path');
+var slugify = require('mout/string/slugify');
 
 var OPERATION_FOLDER = "operations";
 
@@ -50,7 +51,8 @@ module.exports = generators.Base.extend({
 		this.prompt({
 			type    : 'input',
 			name    : 'repository',
-			message : 'Repository'
+			message : 'Repository',
+			default: 'https://github.com/trayio/connectors'
 		}, function (answers) {
 			this.log(answers.repository);
 			this.repository = answers.repository;			
@@ -101,6 +103,27 @@ module.exports = generators.Base.extend({
 	    this.fs.copyTpl(this.templatePath("yart_run.sh"),this.destinationPath("yart_run.sh"),{});	
 
 	},	
+	// createConnectorsFolder: function () {
+
+	// 	// Top level
+	// 	this.fs.write(this.destinationPath('connectors/0/connectors.json'), stringify({
+	// 		name: slugify(this.name),
+	// 		title: this.name,
+	// 		description: this.description,
+	// 		version: "1.0",
+	// 		branches: [],
+	// 		icon: {
+	// 			type: "url",
+	// 			value: "http://images.tray.io.s3.amazonaws.com/static/icons/placeholder.png"
+	// 		},
+	// 		tags: [
+	// 			"service"
+	// 		]
+	// 	}));
+
+
+
+	// },
 	createConnectorJSON: function() {
 		this.fs.write(this.destinationPath("connectors.json"), JSON.stringify([]));
 	},
@@ -108,7 +131,14 @@ module.exports = generators.Base.extend({
 		this.npmInstall(['trayio-connector-sdk'], { 'save': true });		
 	},	
 	installGruntDependency: function () {
-		this.npmInstall(['grunt', 'grunt-contrib-jshint', 'grunt-contrib-watch'], { 'saveDev': true });
+		this.npmInstall([
+			'grunt', 
+			'grunt-contrib-jshint', 
+			'grunt-contrib-watch',
+			'git+https://github.com/trayio/grunt-tray-connectors-generator.git'
+		], { 
+			'saveDev': true 
+		});
 	},
 	createMain: function() {
 	    this.fs.copyTpl(
@@ -132,5 +162,13 @@ module.exports = generators.Base.extend({
 			this.composeWith("trayio-nodejs-connector:trigger", { options: {				
 			}});		  
 		}
-	}
+	},
+	// generateConnectors: function () {
+	// 	this.spawnCommand('grunt', ['generate']);
+	// }
 });
+
+
+function stringify(obj) {
+	return JSON.stringify(obj, null, '  ');
+}
